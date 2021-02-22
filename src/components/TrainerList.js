@@ -11,13 +11,13 @@ const useStyles = makeStyles((theme) => ({
       flexWrap : 'wrap',
       flexDirection : 'row',
       alignItems: 'center',
-      backgroundColor : 'black',
+      backgroundColor : '#150c25',
       minHeight: '100vh',
       backgroundRepeat : 'repeat-y',
       backgroundSize : 'cover',
-    //   [theme.breakpoints.down('md')]: {
-    //     flexDirection: 'column',
-    //   },
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+      }
     },
 }));
 

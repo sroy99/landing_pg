@@ -1,61 +1,81 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import CallIcon from '@material-ui/icons/Call';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { red } from '@material-ui/core/colors';
+import { withStyles } from "@material-ui/core/styles";
+import Collapse from '@material-ui/core/Collapse';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
+  avatar : {
+    backgroundColor: 'red',
+  },
   root: {
-    maxWidth: 445,
-    margin : '65px 65px',
-    display : "inline"
+    width: 645,
+    marginRight : '80px',
+    marginTop : '40px',
+    marginLeft : '80px',
+    background : 'rgba(0,0,0,0.3)'
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  avatar: {
-    backgroundColor: red[500],
+    height: 440,
+    '&:hover': {
+      transform: 'scale(1.3)',
+      transition: 'transform .5s ease'
+    }
   },
   cardTopHeading : {
+        fontFamily : 'Nunito',
+        fontWeight : '900',
+        fontSize : '1.5rem',
+        color : "#fff"
+  },
+  cardTopSubHeader : {
     fontFamily : 'Nunito',
-    fontWeight : '900'
+    fontWeight : '700',
+    fontSize : '1rem',
+    color : "#fff"
+  },
+  details_list : {
+    color : "#fff"
+  },
+});
+
+const WhiteTextTypography = withStyles({
+  root: {
+    color: "#FFFFFF"
   }
-}));
+})(Typography);
 
 export default function ImageCard({instr,check}) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   return (
+    <Collapse
+        in={check}
+        {...(check ? { timeout: 1500 } : {})}
+        collapsedHeight={50}
+      >
     <Card className={classes.root}>
-      <CardHeader
+      <CardActionArea>
+        <CardMedia
+          className={classes.media}
+          image={instr.imageURL}
+          title="trainer"
+        />
+        <CardContent>
+        <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
             {instr.title.charAt(0).toUpperCase()}
@@ -68,50 +88,37 @@ export default function ImageCard({instr,check}) {
         }
         title={instr.title}
         subheader={instr.subHeader}
-        //titleTypographyProps={{variant:'headline' }}
-        classes={{title : classes.cardTopHeading}}
+        
+        classes={{title : classes.cardTopHeading, subheader : classes.cardTopSubHeader}}
       />
-      <CardMedia
-        className={classes.media}
-        image= {instr.imageURL}
-        title="Trainer"
-      />
+          <WhiteTextTypography variant="body2" color="textSecondary" component="p">
+            {instr.caption}
+          </WhiteTextTypography> 
+        </CardContent>
+      </CardActionArea>
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {instr.caption}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <MailOutlineIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <CallIcon />
-        </IconButton>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Details:</Typography>
+       
+          <WhiteTextTypography paragraph>Details:</WhiteTextTypography>
+          <ul>
           {instr.details.map((detail)=>{
               return (
-                <Typography paragraph>
-                    {detail}
-                </Typography>
+               <li className='details_list'><WhiteTextTypography paragraph>
+                 {detail}
+                </WhiteTextTypography></li>
               )
           })}
+          </ul>
         </CardContent>
-      </Collapse>
+      <CardActions>
+        <Button size="small" color="primary">
+          <MailOutlineIcon/>
+        </Button>
+        <Button size="small" color="primary">
+          <CallIcon/>
+        </Button>
+      </CardActions>
     </Card>
-    
+    </Collapse>
   );
 }
+
